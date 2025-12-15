@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matrimony – Bride Search</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+}
+
+header {
+    background: #c2185b;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.profile {
+    display: flex;
+    gap: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.profile img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.profile h2 {
+    margin-top: 0;
+    color: #c2185b;
+}
+
+section {
+    background: white;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+textarea {
+    resize: none;
+    height: 100px;
+}
+
+button {
+    background: #c2185b;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #a3154b;
+}
+
+.request-card {
+    display: flex;
+    gap: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.request-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    background: #333;
+    color: white;
+    padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Matrimony Goom Search</h1>
+    <p>Looking for a Suitable Groom 💍</p>
+</header>
+
+<div class="container">
+
+    <!-- GROOM PROFILE -->
+    <div class="profile">
+        <img src="IMG20240513095935.jpg" alt="Groom">
+        <div>
+            <h2>Groom Profile</h2>
+            <p><b>Name:</b> Groom Name</p>
+            <p><b>Age:</b> 21</p>
+            <p><b>Profession:</b> Software Engineer</p>
+            <p><b>Location:</b> India</p>
+            <p><b>Status:</b> Searching for Groom</p>
+        </div>
+    </div>
+
+    <!-- BRIDE REQUEST FORM -->
+    <section>
+        <h2>Sennd Groom Request</h2>
+        <form id="requestForm">
+            <input type="text" id="brideName" placeholder="Groom Name" required>
+            <input type="number" id="brideAge" placeholder="Groom Age" required>
+            <input type="file" id="bridePhoto" accept="image/*" required>
+            <textarea id="requirements" placeholder="Requirements / Message" required></textarea>
+            <button type="submit">Send Request</button>
+        </form>
+    </section>
+
+    <!-- REQUEST LIST -->
+    <section>
+        <h2>Groom Requests</h2>
+        <div id="requestList"></div>
+    </section>
+
+</div>
+
+<footer>
+    © 2025 Matrimony Connect
+</footer>
+
+<script>
+const form = document.getElementById("requestForm");
+const requestList = document.getElementById("requestList");
+
+let requests = JSON.parse(localStorage.getItem("brideRequests")) || [];
+
+function displayRequests() {
+    requestList.innerHTML = "";
+    requests.forEach(r => {
+        requestList.innerHTML += `
+            <div class="request-card">
+                <img src="${r.photo}">
+                <div>
+                    <h3>${r.name} (${r.age})</h3>
+                    <p><b>Message:</b> ${r.requirements}</p>
+                </div>
+            </div>
+        `;
+    });
+}
+
+displayRequests();
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const reader = new FileReader();
+    const file = document.getElementById("bridePhoto").files[0];
+
+    reader.onload = function() {
+        const request = {
+            name: brideName.value,
+            age: brideAge.value,
+            photo: reader.result,
+            requirements: requirements.value
+        };
+
+        requests.push(request);
+        localStorage.setItem("brideRequests", JSON.stringify(requests));
+        displayRequests();
+        form.reset();
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+</body>
+</html>
